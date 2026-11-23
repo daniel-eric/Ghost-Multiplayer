@@ -3,14 +3,14 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/09/Square/Square.jack
 
-/** Implements a graphical square. */
+/** Implements a graphical character. */
 class Ghost {
 
-   field int x, y; // screen location of the square's top-left corner
-   field int size; // length of this square, in pixels
+   field int x, y; // screen location of the character's top-left corner
+   field int size; // length of this character, in pixels
    field int memAddress;
 
-   /** Constructs a new square with a given location and size. */
+   /** Constructs a new character with a given location and size. */
    constructor Ghost new(int Ax, int Ay) {
       let x = Ax;
       let y = Ay;
@@ -20,25 +20,26 @@ class Ghost {
       return this;
    }
 
-   /** Disposes this square. */
+   /** Disposes this character. */
    method void dispose() {
       do Memory.deAlloc(this);
       return;
    }
 
-   /** Draws the square on the screen. */
+   /** Draws the character on the screen. */
    method void draw() {
       do drawHappyGhost(y*32+(x/size));
       return;
    }
 
-   /** Erases the square from the screen. */
+   /** Erases the character from the screen. */
    method void erase() {
       do Screen.setColor(false);
       do Screen.drawRectangle(x, y, x + size, y + size);
       return;
    }
 
+   /** Draws the character pixel by pixel. */
    method void drawHappyGhost(int location) {
       let memAddress = 16384+location;
       do Memory.poke(memAddress+0, 8184);
@@ -59,28 +60,8 @@ class Ghost {
       do Memory.poke(memAddress+480, -1);
       return;
    }
-   
-    /** Increments the square size by 2 pixels. */
-   method void incSize() {
-      if (((y + size) < 254) & ((x + size) < 510)) {
-         do erase();
-         let size = size + 2;
-         do draw();
-      }
-      return;
-   }
 
-   /** Decrements the square size by 2 pixels. */
-   method void decSize() {
-      if (size > 2) {
-         do erase();
-         let size = size - 2;
-         do draw();
-      }
-      return;
-   }
-
-   /** Moves the ghost up by 16 pixels. */
+   /** Moves the character up by 16 pixels. */
    method void moveUp() {
       if (y > 15) {
          do erase();
@@ -90,7 +71,7 @@ class Ghost {
       return;
    }
 
-   /** Moves the square down by 16 pixels. */
+   /** Moves the character down by 16 pixels. */
    method void moveDown() {
       if ((y + size) < 239) {
          do erase();
@@ -100,7 +81,7 @@ class Ghost {
       return;
    }
 
-   /** Moves the ghost left by 16 pixels. */
+   /** Moves the character left by 16 pixels. */
    method void moveLeft() {
       if (x > 15) {
          do erase();
@@ -110,7 +91,7 @@ class Ghost {
       return;
    }
 
-   /** Moves the square right by 16 pixels. */
+   /** Moves the character right by 16 pixels. */
    method void moveRight() {
       if ((x + size) < 495) {
          do erase();
