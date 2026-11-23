@@ -1,0 +1,98 @@
+/** Implements the Person character. */
+class Person {
+
+   field int x, y; // screen location of the character's top-left corner
+   field int size; // length of this character, in pixels
+   field int memAddress;
+
+   /** Constructs a new character with a given location and size. */
+   constructor Person new(int Ax, int Ay) {
+      let x = Ax;
+      let y = Ay;
+      let size = 16;
+      let memAddress = 0;
+      do draw();
+      return this;
+   }
+
+   /** Disposes this character. */
+   method void dispose() {
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   /** Draws the character on the screen. */
+   method void draw() {
+      do drawHappyPerson(y*32+(x/size));
+      return;
+   }
+
+   /** Erases the character from the screen. */
+   method void erase() {
+      do Screen.setColor(false);
+      do Screen.drawRectangle(x, y, x + size, y + size);
+      return;
+   }
+
+   /** Draws the character pixel by pixel. */
+   method void drawHappyPerson(int location) {
+      let memAddress = 16384+location;
+      do Memory.poke(memAddress, 62);
+	   do Memory.poke(memAddress +32, 127);
+	   do Memory.poke(memAddress +64, 109);
+	   do Memory.poke(memAddress +96, 109);
+	   do Memory.poke(memAddress +128, 127);
+	   do Memory.poke(memAddress +160, 127);
+	   do Memory.poke(memAddress +192, 111);
+	   do Memory.poke(memAddress +224, 115);
+	   do Memory.poke(memAddress +256, 127);
+	   do Memory.poke(memAddress +288, 62);
+	   do Memory.poke(memAddress +320, 28);
+	   do Memory.poke(memAddress +352, 72);
+	   do Memory.poke(memAddress +384, 60);
+	   do Memory.poke(memAddress +416, 10);
+	   do Memory.poke(memAddress +448, 63);
+	   do Memory.poke(memAddress +480, 33);
+	   return;
+   }
+
+   /** Moves the character up by 16 pixels. */
+   method void moveUp() {
+      if (y > 15) {
+         do erase();
+         let y = y - 16;
+         do draw();
+      }
+      return;
+   }
+
+   /** Moves the character down by 16 pixels. */
+   method void moveDown() {
+      if ((y + size) < 239) {
+         do erase();
+         let y = y + 16;
+         do draw();
+      }
+      return;
+   }
+
+   /** Moves the character left by 16 pixels. */
+   method void moveLeft() {
+      if (x > 15) {
+         do erase();
+         let x = x - 16;
+         do draw();
+      }
+      return;
+   }
+
+   /** Moves the character right by 16 pixels. */
+   method void moveRight() {
+      if ((x + size) < 495) {
+         do erase();
+         let x = x + 16;
+         do draw();
+      }
+      return;
+   }
+}
