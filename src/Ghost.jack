@@ -6,8 +6,8 @@
 /** Implements a graphical character. */
 class Ghost {
 
-   field int x, y; // screen location of the character's top-left corner
-   field int size; // length of this character, in pixels
+   field int x, y;
+   field int size;
    field int memAddress;
 
    /** Constructs a new character with a given location and size. */
@@ -16,7 +16,9 @@ class Ghost {
       let y = Ay;
       let size = 16;
       let memAddress = 0;
+
       do draw();
+
       return this;
    }
 
@@ -28,20 +30,21 @@ class Ghost {
 
    /** Draws the character on the screen. */
    method void draw() {
-      do drawHappyGhost(y*32+(x/size));
+      do drawHappyGhost(y * 32 + (x / size));
       return;
    }
 
    /** Erases the character from the screen. */
    method void erase() {
       do Screen.setColor(false);
-      do Screen.drawRectangle(x, y, x + size, y + size);
+      do Screen.drawRectangle(x, y, x + (size - 1), y + (size - 1));
       return;
    }
 
-   /** Draws the character pixel by pixel. */
+   /** Draws the character bitmap. */
    method void drawHappyGhost(int location) {
       let memAddress = 16384+location;
+
       do Memory.poke(memAddress+0, 8184);
       do Memory.poke(memAddress+32, 16380);
       do Memory.poke(memAddress+64, 25542);
@@ -58,46 +61,57 @@ class Ghost {
       do Memory.poke(memAddress+416, -961);
       do Memory.poke(memAddress+448, -1);
       do Memory.poke(memAddress+480, -1);
+
       return;
    }
 
-   /** Moves the character up by 16 pixels. */
-   method void moveUp() {
-      if (y > 15) {
-         do erase();
-         let y = y - 16;
+   /** Moves the character up by 16 pixels if the path is free. */
+   method void moveUp(Maze maze) {
+      if (~(maze.isWall(x, y + 16))) {
+        do erase();
+        let y = y - 16;
+        do draw();
+      }
+      return;
+   }
+
+   /** Moves the character down by 16 pixels if the path is free. */
+   method void moveDown(Maze maze) {
+      if (~(maze.isWall(x, y + 16))) {
+        do erase();
+        let y = y + 16;
          do draw();
       }
       return;
    }
 
-   /** Moves the character down by 16 pixels. */
-   method void moveDown() {
-      if ((y + size) < 239) {
-         do erase();
-         let y = y + 16;
-         do draw();
+   /** Moves the character left by 16 pixels if the path is free. */
+   method void moveLeft(Maze maze) {
+      if (~(maze.isWall(x - 16, y))) {
+        do erase();
+        let x = x - 16;
+        do draw();
       }
       return;
    }
 
-   /** Moves the character left by 16 pixels. */
-   method void moveLeft() {
-      if (x > 15) {
-         do erase();
-         let x = x - 16;
-         do draw();
-      }
-      return;
-   }
-
-   /** Moves the character right by 16 pixels. */
+   /** Moves the character right by 16 pixels if the path is free. */
    method void moveRight() {
-      if ((x + size) < 495) {
-         do erase();
-         let x = x + 16;
-         do draw();
+      if (~(maze.isWall(x + 16, y))) {
+        do erase();
+        let x = x + 16
+        do draw();
       }
       return;
    }
+
+   /** Returns the current horizontal position. */
+   method int getX() {
+      return x;
+    }
+
+    /** Returns the current vertical position. */
+   method int getY() {
+      return y;
+    }
 }

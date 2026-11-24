@@ -1,0 +1,140 @@
+
+/**
+ * Implements the maze and wall collision detection.
+ * The screen is divided into 32 columns and 16 rows.
+ * Each cell measures 16 by 16 pixels.
+ *
+ * Map values:
+ * 0 = free corridor
+ * 1 = wall
+ */
+class Maze {
+
+    field Array map;
+
+    /** Creates and initializes the maze. */
+    constructor Maze new() {
+        var int row;
+        var int col;
+        var int index;
+
+        let map = Array.new(512);
+
+        let row = 0;
+
+        while (row < 16) {
+            let col = 0;
+
+            while (col < 32) {
+                let index = row * 32 + col;
+
+                // Creates the outer walls.
+                if ((row = 0) | (row = 15) |
+                    (col = 0) | (col = 31)) {
+                    let map[index] = 1;
+                } else {
+                    let map[index] = 0;
+                }
+
+                let col = col + 1;
+            }
+
+            let row = row + 1;
+        }
+
+        // Some internal walls.
+        do setWall(3, 5);
+        do setWall(4, 5);
+        do setWall(5, 5);
+
+        do setWall(7, 10);
+        do setWall(8, 10);
+        do setWall(9, 10);
+
+        do setWall(4, 18);
+        do setWall(5, 18);
+        do setWall(6, 18);
+
+        return this;
+    }
+
+    /** Marks a cell as a wall. */
+    method void setWall(int row, int col) {
+        let map[row * 32 + col] = 1;
+        return;
+    }
+
+    /**
+     * Returns true if the pixel position
+     * corresponds to a wall or is outside the screen.
+     */
+    method boolean isWall(int pixelX, int pixelY) {
+        var int row;
+        var int col;
+        var int index;
+
+        // Protects the screen boundaries.
+        if ((pixelX < 0) | (pixelX > 496) |
+            (pixelY < 0) | (pixelY > 240)) {
+            return true;
+        }
+
+        let col = pixelX / 16;
+        let row = pixelY / 16;
+
+        let index = row * 32 + col;
+
+        if (map[index] = 1) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /** Draws the walls using video memory. */
+    method void draw() {
+        var int row;
+        var int col;
+        var int line;
+        var int address;
+
+        do Screen.clearScreen();
+
+        let row = 0;
+
+        while (row < 16) {
+            let col = 0;
+
+            while (col < 32) {
+
+                if (map[row * 32 + col] = 1) {
+
+                    let line = 0;
+
+                    while (line < 16) {
+                        let address = 16384 +
+                            ((row * 16 + line) * 32) + col;
+
+                        // All 16 pixels of this row are on.
+                        do Memory.poke(address, -1);
+
+                        let line = line + 1;
+                    }
+                }
+
+                let col = col + 1;
+            }
+
+            let row = row + 1;
+        }
+
+        return;
+    }
+
+    /** Releases the map array and this object. */
+    method void dispose() {
+        do map.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+}

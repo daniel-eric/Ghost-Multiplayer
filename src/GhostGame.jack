@@ -22,43 +22,76 @@ class GhostGame {
    field Random random;
    field Ghost ghost;
    field Person person;
+   field Maze maze;
 
    /** Constructs a new Ghost_Multiplayer Game. */
    constructor GhostGame new() {
-      let ghost = Ghost.new(0, 0);
-      let person = Person.new(64, 64);
+      let maze = Maze.new();
+      do maze.draw();
+
+      let ghost = Ghost.new(16, 16);
+      let person = Person.new(464, 224);
+
       let random = Random.new(19);
+
       let directionGhost = 0;
       let directionPerson = 0;
       return this;
    }
 
-   /** Disposes this game. */
+   /** Disposes this game and its objects. */
    method void dispose() {
       do ghost.dispose();
       do person.dispose();
+      do maze.dispose();
       do random.dispose();
+
       do Memory.deAlloc(this);
-      return;
-   }
+
+    return;
+}
 
    /** Moves the Ghost in the current direction. */
    method void moveGhost() {
-      if (directionGhost = 1) { do ghost.moveUp(); }
-      if (directionGhost = 2) { do ghost.moveDown(); }
-      if (directionGhost = 3) { do ghost.moveLeft(); }
-      if (directionGhost = 4) { do ghost.moveRight(); }
+      if (directionGhost = 1) {
+         do ghost.moveUp(maze);
+      }
+
+      if (directionGhost = 2) {
+         do ghost.moveDown(maze);
+      }
+
+      if (directionGhost = 3) {
+         do ghost.moveLeft(maze);
+      }
+
+      if (directionGhost = 4) {
+         do ghost.moveRight(maze);
+      }
+
       return;
    }
 
    /** Moves the Person in the current direction. */
    method void movePerson() {
-      if (directionPerson = 5) { do person.moveUp(); }
-      if (directionPerson = 6) { do person.moveDown(); }
-      if (directionPerson = 7) { do person.moveLeft(); }
-      if (directionPerson = 8) { do person.moveRight(); }
+      if (directionPerson = 5) {
+         do person.moveUp(maze);
+      }
+
+      if (directionPerson = 6) {
+         do person.moveDown(maze);
+      }
+
+      if (directionPerson = 7) {
+         do person.moveLeft(maze);
+      }
+
+      if (directionPerson = 8) {
+         do person.moveRight(maze);
+      }
+
       return;
-   }
+}
 
    /** Runs the game and handles both players' inputs. */
    method void run() {
