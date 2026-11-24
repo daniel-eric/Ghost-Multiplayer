@@ -65,8 +65,15 @@ class GhostGame {
       var char key;
       var boolean exit;
       let exit = false;
-      
+
+      var int timer;
+      let timer = 60000; // in milliseconds
+
       while (~exit) {
+         // Displays timer in seconds
+         do Output.moveCursor(0, 0);
+         do Output.printInt(timer / 1000);
+
          // Reads the currently pressed key
          let key = Keyboard.keyPressed();
 
@@ -92,6 +99,9 @@ class GhostGame {
          do movePerson();
 
          do sys.wait(50);
+
+         // Updates timer
+         let timer = timer - 50;
      }
      return;
    }
