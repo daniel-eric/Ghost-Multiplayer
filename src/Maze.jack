@@ -20,14 +20,13 @@ class Maze {
 
         let map = Array.new(512);
 
+        let index = 0;
         let row = 0;
 
         while (row < 16) {
             let col = 0;
 
             while (col < 32) {
-                let index = row * 32 + col;
-
                 // Creates the outer walls.
                 if ((row = 0) | (row = 15) |
                     (col = 0) | (col = 31)) {
@@ -37,6 +36,7 @@ class Maze {
                 }
 
                 let col = col + 1;
+                let index = index + 1;
             }
 
             let row = row + 1;
@@ -82,7 +82,13 @@ class Maze {
         let col = pixelX / 16;
         let row = pixelY / 16;
 
-        let index = row * 32 + col;
+        let index = row + row;
+        let index = index + index;
+        let index = index + index;
+        let index = index + index;
+        let index = index + index;
+
+        let index = index + col;
 
         if (map[index] = 1) {
             return true;
@@ -91,45 +97,51 @@ class Maze {
         return false;
     }
 
-    /** Draws the walls using video memory. */
+
     method void draw() {
         var int row;
         var int col;
-        var int line;
         var int address;
+        var int rowBase;
+        var int mapIndex;
+        var int endAddress;
 
         do Screen.clearScreen();
 
         let row = 0;
+        let rowBase = 0;
+        let mapIndex = 0;
 
         while (row < 16) {
             let col = 0;
 
             while (col < 32) {
 
-                if (map[row * 32 + col] = 1) {
+                if (map[mapIndex] = 1) {
+                    // Endereço inicial da parede.
+                    let address = 16384 + rowBase + col;
+                    let endAddress = address + 512;
 
-                    let line = 0;
-
-                    while (line < 16) {
-                        let address = 16384 +
-                            ((row * 16 + line) * 32) + col;
-
-                        // All 16 pixels of this row are on.
+                    // Uma palavra de 16 bits por linha.
+                    while (address < endAddress) {
                         do Memory.poke(address, -1);
 
-                        let line = line + 1;
+                        // Próxima linha da tela.
+                        let address = address + 32;
                     }
                 }
 
                 let col = col + 1;
+                let mapIndex = mapIndex + 1;
             }
 
             let row = row + 1;
+            let rowBase = rowBase + 512;
         }
 
         return;
     }
+
 
     /** Releases the map array and this object. */
     method void dispose() {
