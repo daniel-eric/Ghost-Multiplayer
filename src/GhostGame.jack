@@ -36,6 +36,7 @@ class GhostGame {
 
       let directionGhost = 0;
       let directionPerson = 0;
+
       return this;
    }
 
@@ -48,8 +49,8 @@ class GhostGame {
 
       do Memory.deAlloc(this);
 
-    return;
-}
+   return;
+   }
 
    /** Moves the Ghost in the current direction. */
    method void moveGhost() {
@@ -91,16 +92,27 @@ class GhostGame {
       }
 
       return;
+   }
+
+   /** Checks whether the Ghost caught the Person. */
+   method boolean playersCollision() {
+      if ((ghost.getX() = person.getX()) &
+      (ghost.getY() = person.getY())) {
+      return true;
+    }
+    return false;
 }
 
    /** Runs the game and handles both players' inputs. */
    method void run() {
       var char key;
       var boolean exit;
-      let exit = false;
-
       var int timer;
-      let timer = 60000; // in milliseconds
+      var int advantageTimer;
+
+      let exit = false;
+      let timer = 1260;
+      let advantageTimer = 60;
 
       while (~exit) {
          // Displays timer in seconds
@@ -128,13 +140,27 @@ class GhostGame {
          // Stops all characters' directions
          if (key = 80) { let directionGhost = 0; let directionPerson = 0; } // P key
 
-         do moveGhost();
          do movePerson();
 
-         do sys.wait(50);
+         // Ghost remains frozen during the initial advantage
+         if (advantageTimer > 0) {
+            let advantageTimer = advantageTimer - 1;
+         } else {
+            do moveGhost();
+            if (playersCollision()) {
+            let exit = true;
+            }
+         }
+
+         do Sys.wait(50);
 
          // Updates timer
-         let timer = timer - 50;
+         let timer = timer - 1;
+
+         // Stop condition when timer runs out
+         if (timer < 0) {
+            let exit = true;
+         }
      }
      return;
    }

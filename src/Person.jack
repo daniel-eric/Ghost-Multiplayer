@@ -38,9 +38,9 @@ class Person {
 
    /** Draws the character pixel by pixel. */
    method void drawHappyPerson(int location) {
-       let memAddress = 16384+location;
+      let memAddress = 16384+location;
 
-       do Memory.poke(memAddress, 62);
+      do Memory.poke(memAddress, 62);
 	   do Memory.poke(memAddress +32, 127);
 	   do Memory.poke(memAddress +64, 109);
 	   do Memory.poke(memAddress +96, 109);
@@ -61,7 +61,7 @@ class Person {
    }
 
    /** Moves the character up by 16 pixels if the path is free. */
-   method void moveUp() {
+   method void moveUp(Maze maze) {
       if (~(maze.isWall(x, y - 16))) {
         do erase();
         let y = y - 16;
@@ -71,30 +71,30 @@ class Person {
    }
 
    /** Moves the character down by 16 pixels if the path is free. */
-   method void moveDown() {
+   method void moveDown(Maze maze) {
       if (~(maze.isWall(x, y + 16))) {
         do erase();
-        y = y + 16;
+        let y = y + 16;
         do draw();
       }
       return;
    }
 
    /** Moves the character left by 16 pixels if the path is free. */
-   method void moveLeft() {
+   method void moveLeft(Maze maze) {
       if (~(maze.isWall(x - 16, y))) {
         do erase();
-        x = x - 16;
+        let x = x - 16;
         do draw();
       }
       return;
    }
 
    /** Moves the character right by 16 pixels if the path is free. */
-   method void moveRight() {
+   method void moveRight(Maze maze) {
       if (~(maze.isWall(x + 16, y))) {
         do erase();
-        x = x + 16;
+        let x = x + 16;
         do draw();
       }
       return;

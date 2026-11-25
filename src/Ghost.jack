@@ -96,10 +96,10 @@ class Ghost {
    }
 
    /** Moves the character right by 16 pixels if the path is free. */
-   method void moveRight() {
+   method void moveRight(Maze maze) {
       if (~(maze.isWall(x + 16, y))) {
         do erase();
-        let x = x + 16
+        let x = x + 16;
         do draw();
       }
       return;
