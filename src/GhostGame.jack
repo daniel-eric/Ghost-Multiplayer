@@ -28,44 +28,45 @@ class GhostGame {
 
    /** Constructs a new Ghost_Multiplayer Game. */
    constructor GhostGame new() {
+      var int ghostPositionX;
+      var int ghostPositionY;
+      var int personPositionX;
+      var int personPositionY;
+      var int dx;
+      var int dy;
+      var int minDis;
+      var boolean validGhostPosition;
+      var boolean validPersonPosition;
+
       let maze = Maze.new();
       do maze.draw();
       do waitForStart();
 
       /* Generating the position of the two characters of the game: */
-
       let random = Random.new(19);
 
-      var int ghostPositionX;
-      var int ghostPositionY;
-      var int personPositionX;
-      var int personPositionY;
-
-      var boolean validGhostPosition;
-      var boolean validPersonPosition;
       let validGhostPosition = false;
       let validPersonPosition = false;
 
-      while(~validGhostPosition){
-         let ghostPositionX = random.randRange();
-         let ghostPositionY = random.randRange();
+      while (~validGhostPosition) {
+         let ghostPositionX = random.randRange(31) * 16;
+         let ghostPositionY = random.randRange(15) * 16;
 
-         if(~(Memory.peek(16384 + (32 * ghostPositionY) + (ghostPositionX / 16)) = -1)){
+         if (~(Memory.peek(16384 + (32 * ghostPositionY) + (ghostPositionX / 16)) = -1)) {
             let validGhostPosition = true;
          }
       }
 
-      while(~validPersonPosition){
-         let personPositionX = random.randRange();
-         let personPositionY = random.randRange();
+      while (~validPersonPosition) {
+         let personPositionX = random.randRange(31) * 16;
+         let personPositionY = random.randRange(15) * 16;
 
-         if(~(Memory.peek(16384 + (32 * personPositionY) + (personPositionX / 16)) = -1)){
-            var int dx, dy, minDis;
-            let dx = (personPositionX - ghostPositionX) / 2;  // The division is used to avoid overflow 
+         if (~(Memory.peek(16384 + (32 * personPositionY) + (personPositionX / 16)) = -1)) {
+            let dx = (personPositionX - ghostPositionX) / 2;
             let dy = (personPositionY - ghostPositionY) / 2;
-            let minDis = 18; // The minimum distance (open set) required between the person and the ghost
+            let minDis = 18;
 
-            if(((dx*dx) + (dy*dy)) > minDis){  // It evaluates whether the person is far away from the ghost, initially
+            if (((dx * dx) + (dy * dy)) > minDis) {
                let validPersonPosition = true;
             }
          }
