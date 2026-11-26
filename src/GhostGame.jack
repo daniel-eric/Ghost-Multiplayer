@@ -23,6 +23,8 @@ class GhostGame {
    field Ghost ghost;
    field Person person;
    field Maze maze;
+   field int cycles;
+   field int seconds;
 
    /** Constructs a new Ghost_Multiplayer Game. */
    constructor GhostGame new() {
@@ -74,6 +76,8 @@ class GhostGame {
 
       let directionGhost = 0;
       let directionPerson = 0;
+      let cycles = 0;
+      let seconds = 0;
 
       return this;
    }
@@ -162,8 +166,33 @@ class GhostGame {
       return;
    }
 
-   /** Shows the winner and clears the playing field. */
-   method void showEndScreen(int winner) {
+    method boolean updateTimer() {
+      var int delay;
+      let delay = 0;
+      while (delay < 5645) {
+         let delay = delay + 1;
+      }
+      let cycles = cycles + 1;
+      if (cycles = 15) {
+         let seconds = seconds + 1;
+         let cycles = 0;
+      }
+      if (seconds = 63) {
+         return true;
+      }
+      return false;
+   }
+
+    /** Shows the winner and clears the playing field. */
+   method boolean showEndScreen(int winner) {
+      var int ticks;
+      var int delay;
+      var char key;
+      var boolean escArmed;
+
+      let ticks = 0;
+      let escArmed = false;
+
       do Screen.clearScreen();
       do Output.moveCursor(9, 9);
 
@@ -173,30 +202,43 @@ class GhostGame {
          if (winner = 2) {
             do Output.printString("Person venceu!");
          } else {
-            do Output.printString("Jogo encerrado");
+            do Output.printString("Fim de jogo");
          }
       }
 
-      return;
+      while (ticks < 150) {
+         let delay = 0;
+         while (delay < 5645) {
+            let delay = delay + 1;
+         }
+         let key = Keyboard.keyPressed();
+         if (~(key = 140)) {
+            let escArmed = true;
+         } else {
+            if (escArmed) {
+               return false;
+            }
+         }
+         let ticks = ticks + 1;
+      }
+      return true;
    }
 
    /** Runs the game and handles both players' inputs. */
-   method void run() {
+   method boolean run() {
       var char key;
       var boolean exit;
-      var int timer;
       var int advantageTimer;
       var int winner;
 
       let exit = false;
-      let timer = 1260;
-      let advantageTimer = 60;
+      let advantageTimer = 45;
       let winner = 0;
 
       while (~exit) {
          // Displays timer in seconds
          do Output.moveCursor(0, 0);
-         do Output.printInt(timer / 1000);
+         do Output.printInt(seconds);
 
          // Reads the currently pressed key
          let key = Keyboard.keyPressed();
@@ -232,20 +274,15 @@ class GhostGame {
                let winner = 1;
             }
          }
-
-         // Updates timer
-         // let timer = timer - 1;
-
-         // Stop condition when timer runs out
-         // if (timer < 0) {
-         //   let exit = true;
-         //   let winner = 2;
-         // }
+         
+         if (updateTimer()) {
+            let exit = true;
+            let winner = 2;
+         }
       }
 
-      do showEndScreen(winner);
-      return;
-    }
+      return showEndScreen(winner);
+   }
 }
 
 

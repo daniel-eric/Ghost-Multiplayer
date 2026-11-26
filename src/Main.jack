@@ -7,14 +7,17 @@
 class Main {
     function void main() {
         var GhostGame game;
+        var boolean restart;
 
         while (true) {
             let game = GhostGame.new();
 
-            do game.run();
+            let restart = game.run();
             do game.dispose();
 
-            // do Sys.wait(500);
+            if (~restart) {
+                return;
+            }
         }
         return;
     }
