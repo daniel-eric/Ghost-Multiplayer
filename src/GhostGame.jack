@@ -29,10 +29,47 @@ class GhostGame {
       let maze = Maze.new();
       do maze.draw();
 
-      let ghost = Ghost.new(16, 16);
-      let person = Person.new(464, 224);
+      /* Generating the position of the two characters of the game: */
 
       let random = Random.new(19);
+
+      var int ghostPositionX;
+      var int ghostPositionY;
+      var int personPositionX;
+      var int personPositionY;
+
+      var boolean validGhostPosition;
+      var boolean validPersonPosition;
+      let validGhostPosition = false;
+      let validPersonPosition = false;
+
+      while(~validGhostPosition){
+         let ghostPositionX = random.randRange();
+         let ghostPositionY = random.randRange();
+
+         if(~(Memory.peek(16384 + (32 * ghostPositionY) + (ghostPositionX / 16)) = -1)){
+            let validGhostPosition = true;
+         }
+      }
+
+      while(~validPersonPosition){
+         let personPositionX = random.randRange();
+         let personPositionY = random.randRange();
+
+         if(~(Memory.peek(16384 + (32 * personPositionY) + (personPositionX / 16)) = -1)){
+            var int dx, dy, minDis;
+            let dx = (personPositionX - ghostPositionX) / 2;  // The division is used to avoid overflow 
+            let dy = (personPositionY - ghostPositionY) / 2;
+            let minDis = 18; // The minimum distance (open set) required between the person and the ghost
+
+            if(((dx*dx) + (dy*dy)) > minDis){  // It evaluates whether the person is far away from the ghost, initially
+               let validPersonPosition = true;
+            }
+         }
+      }
+
+      let ghost = Ghost.new(ghostPositionX, ghostPositionY);
+      let person = Person.new(personPositionX, personPositionY);
 
       let directionGhost = 0;
       let directionPerson = 0;
