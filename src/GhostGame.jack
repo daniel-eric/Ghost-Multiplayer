@@ -28,6 +28,7 @@ class GhostGame {
    constructor GhostGame new() {
       let maze = Maze.new();
       do maze.draw();
+      do waitForStart();
 
       let ghost = Ghost.new(16, 16);
       let person = Person.new(464, 224);
@@ -99,9 +100,30 @@ class GhostGame {
       if ((ghost.getX() = person.getX()) &
       (ghost.getY() = person.getY())) {
       return true;
-    }
+      }
     return false;
-}
+   }
+
+   method void waitForStart() {
+      var char key;
+      var int i;
+
+      do Output.moveCursor(15, 3);
+      do Output.printString("Pressione qualquer tecla para iniciar o jogo");
+
+      let key = 0;
+      while (key = 0) {
+         let key = Keyboard.keyPressed();
+      }
+
+      do Output.moveCursor(15, 3);
+      let i = 0;
+      while (i < 44) {
+         do Output.printChar(32);
+         let i = i + 1;
+      }
+      return;
+   }
 
    /** Runs the game and handles both players' inputs. */
    method void run() {
@@ -131,11 +153,11 @@ class GhostGame {
          if (key = 130) { let directionGhost = 3; } // left arrow
          if (key = 132) { let directionGhost = 4; } // right arrow
 
-         // Person movements
-         if (key = 87) { let directionPerson = 5; } // W
-         if (key = 83) { let directionPerson = 6; } // S
-         if (key = 65) { let directionPerson = 7; } // A
-         if (key = 68) { let directionPerson = 8; } // D
+          // Person movements
+          if ((key = 87) | (key = 119)) { let directionPerson = 5; } // W
+          if ((key = 83) | (key = 115)) { let directionPerson = 6; } // S
+          if ((key = 65) | (key = 97)) { let directionPerson = 7; } // A
+          if ((key = 68) | (key = 100)) { let directionPerson = 8; } // D
 
          // Stops all characters' directions
          if (key = 80) { let directionGhost = 0; let directionPerson = 0; } // P key
@@ -152,15 +174,15 @@ class GhostGame {
             }
          }
 
-         do Sys.wait(50);
+         do Sys.wait(250);
 
          // Updates timer
          let timer = timer - 1;
 
          // Stop condition when timer runs out
-         if (timer < 0) {
-            let exit = true;
-         }
+         // if (timer < 0) {
+         // let exit = true;
+         // }
      }
      return;
    }

@@ -67,7 +67,7 @@ class Ghost {
 
    /** Moves the character up by 16 pixels if the path is free. */
    method void moveUp(Maze maze) {
-      if (~(maze.isWall(x, y + 16))) {
+      if (~(maze.isWall(x, y - 16))) {
         do erase();
         let y = y - 16;
         do draw();
