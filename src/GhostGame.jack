@@ -162,16 +162,36 @@ class GhostGame {
       return;
    }
 
+   /** Shows the winner and clears the playing field. */
+   method void showEndScreen(int winner) {
+      do Screen.clearScreen();
+      do Output.moveCursor(9, 9);
+
+      if (winner = 1) {
+         do Output.printString("Ghost venceu!");
+      } else {
+         if (winner = 2) {
+            do Output.printString("Person venceu!");
+         } else {
+            do Output.printString("Jogo encerrado");
+         }
+      }
+
+      return;
+   }
+
    /** Runs the game and handles both players' inputs. */
    method void run() {
       var char key;
       var boolean exit;
       var int timer;
       var int advantageTimer;
+      var int winner;
 
       let exit = false;
       let timer = 1260;
       let advantageTimer = 60;
+      let winner = 0;
 
       while (~exit) {
          // Displays timer in seconds
@@ -190,11 +210,11 @@ class GhostGame {
          if (key = 130) { let directionGhost = 3; } // left arrow
          if (key = 132) { let directionGhost = 4; } // right arrow
 
-          // Person movements
-          if ((key = 87) | (key = 119)) { let directionPerson = 5; } // W
-          if ((key = 83) | (key = 115)) { let directionPerson = 6; } // S
-          if ((key = 65) | (key = 97)) { let directionPerson = 7; } // A
-          if ((key = 68) | (key = 100)) { let directionPerson = 8; } // D
+         // Person movements
+         if ((key = 87) | (key = 119)) { let directionPerson = 5; } // W
+         if ((key = 83) | (key = 115)) { let directionPerson = 6; } // S
+         if ((key = 65) | (key = 97)) { let directionPerson = 7; } // A
+         if ((key = 68) | (key = 100)) { let directionPerson = 8; } // D
 
          // Stops all characters' directions
          if (key = 80) { let directionGhost = 0; let directionPerson = 0; } // P key
@@ -206,23 +226,26 @@ class GhostGame {
             let advantageTimer = advantageTimer - 1;
          } else {
             do moveGhost();
+
             if (playersCollision()) {
-            let exit = true;
+               let exit = true;
+               let winner = 1;
             }
          }
 
-         do Sys.wait(250);
-
          // Updates timer
-         let timer = timer - 1;
+         // let timer = timer - 1;
 
          // Stop condition when timer runs out
          // if (timer < 0) {
-         // let exit = true;
+         //   let exit = true;
+         //   let winner = 2;
          // }
-     }
-     return;
-   }
+      }
+
+      do showEndScreen(winner);
+      return;
+    }
 }
 
 

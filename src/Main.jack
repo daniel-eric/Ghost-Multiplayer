@@ -7,11 +7,15 @@
 class Main {
     function void main() {
         var GhostGame game;
-        let game = GhostGame.new();
 
-        do game.run();
-        do game.dispose();
-        
+        while (true) {
+            let game = GhostGame.new();
+
+            do game.run();
+            do game.dispose();
+
+            // do Sys.wait(500);
+        }
         return;
     }
 }
