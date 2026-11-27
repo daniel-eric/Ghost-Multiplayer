@@ -17,6 +17,7 @@ class Maze {
         var int row;
         var int col;
         var int index;
+        var String line;
 
         let map = Array.new(512);
 
@@ -24,12 +25,11 @@ class Maze {
         let row = 0;
 
         while (row < 16) {
+            let line = layoutRow(row);
             let col = 0;
 
             while (col < 32) {
-                // Creates the outer walls.
-                if ((row = 0) | (row = 15) |
-                    (col = 0) | (col = 31)) {
+                if (line.charAt(col) = 49) {
                     let map[index] = 1;
                 } else {
                     let map[index] = 0;
@@ -42,26 +42,27 @@ class Maze {
             let row = row + 1;
         }
 
-        // Some internal walls.
-        do setWall(3, 5);
-        do setWall(4, 5);
-        do setWall(5, 5);
-
-        do setWall(7, 10);
-        do setWall(8, 10);
-        do setWall(9, 10);
-
-        do setWall(4, 18);
-        do setWall(5, 18);
-        do setWall(6, 18);
-
         return this;
     }
 
-    /** Marks a cell as a wall. */
-    method void setWall(int row, int col) {
-        let map[row * 32 + col] = 1;
-        return;
+    method String layoutRow(int row) {
+        if (row = 0)  { return "11111111111111111111111111111111"; }
+        if (row = 1)  { return "10000100100000001000000000000011"; }
+        if (row = 2)  { return "10110101101011101010101111100101"; }
+        if (row = 3)  { return "11100000101010101010101010001001"; }
+        if (row = 4)  { return "10001110001010101010101010010001"; }
+        if (row = 5)  { return "10001000001010101010101010100101"; }
+        if (row = 6)  { return "11111111101010101010101010001001"; }
+        if (row = 7)  { return "10000000001010101010101011011011"; }
+        if (row = 8)  { return "10000000001010101010101011011011"; }
+        if (row = 9)  { return "10111111111010101010101010001001"; }
+        if (row = 10) { return "10000010001010101010101010100101"; }
+        if (row = 11) { return "10001110001010101010101010010001"; }
+        if (row = 12) { return "11100000101010101010101010001001"; }
+        if (row = 13) { return "10110101101110101010111011100101"; }
+        if (row = 14) { return "10000100100000000010000000000011"; }
+
+        return "11111111111111111111111111111111";
     }
 
     /**
