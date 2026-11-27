@@ -43,7 +43,6 @@ class GhostGame {
       do waitForStart();
 
       /* Generating the position of the two characters of the game: */
-      let random = Random.new(19);
 
       let validGhostPosition = false;
       let validPersonPosition = false;
@@ -149,14 +148,19 @@ class GhostGame {
    method void waitForStart() {
       var char key;
       var int i;
+      var int counter;
 
       do Output.moveCursor(15, 3);
       do Output.printString("Pressione qualquer tecla para iniciar o jogo");
 
       let key = 0;
+      let counter = 0;
       while (key = 0) {
+         let counter = counter + 1;
          let key = Keyboard.keyPressed();
       }
+
+      let random = Random.new(counter);
 
       do Output.moveCursor(15, 3);
       let i = 0;
@@ -285,6 +289,3 @@ class GhostGame {
       return showEndScreen(winner);
    }
 }
-
-
-
